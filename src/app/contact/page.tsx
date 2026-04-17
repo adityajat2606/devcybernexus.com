@@ -18,11 +18,11 @@ function getTone(kind: ReturnType<typeof getProductKind>) {
   }
   if (kind === 'editorial') {
     return {
-      shell: 'bg-[#fbf6ee] text-[#241711]',
-      panel: 'border border-[#dcc8b7] bg-[#fffdfa]',
-      soft: 'border border-[#e6d6c8] bg-[#fff4e8]',
-      muted: 'text-[#6e5547]',
-      action: 'bg-[#241711] text-[#fff1e2] hover:bg-[#3a241b]',
+      shell: 'bg-gradient-to-b from-orange-50/35 via-neutral-50 to-white text-neutral-950',
+      panel: 'border border-neutral-200/90 bg-white shadow-[0_24px_70px_rgba(0,0,0,0.06)]',
+      soft: 'border border-neutral-200/80 bg-white',
+      muted: 'text-neutral-600',
+      action: 'bg-[#FF5C00] text-white hover:bg-[#e65300]',
     }
   }
   if (kind === 'visual') {
@@ -83,8 +83,10 @@ export default function ContactPage() {
         <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Contact {SITE_CONFIG.name}</p>
-            <h1 className="mt-4 text-5xl font-semibold tracking-[-0.05em]">A support page that matches the product, not a generic contact form.</h1>
-            <p className={`mt-5 max-w-2xl text-sm leading-8 ${tone.muted}`}>Tell us what you are trying to publish, fix, or launch. We will route it through the right lane instead of forcing every request into the same support bucket.</p>
+            <h1 className="mt-4 text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">Talk with the editorial desk—pitch, partnership, or product feedback.</h1>
+            <p className={`mt-5 max-w-2xl text-sm leading-8 ${tone.muted}`}>
+              Share enough context that we can route your note quickly. We read every message and respond with clear next steps—no ticket black holes.
+            </p>
             <div className="mt-8 space-y-4">
               {lanes.map((lane) => (
                 <div key={lane.title} className={`rounded-[1.6rem] p-5 ${tone.soft}`}>
@@ -99,10 +101,10 @@ export default function ContactPage() {
           <div className={`rounded-[2rem] p-7 ${tone.panel}`}>
             <h2 className="text-2xl font-semibold">Send a message</h2>
             <form className="mt-6 grid gap-4">
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Your name" />
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Email address" />
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="What do you need help with?" />
-              <textarea className="min-h-[180px] rounded-2xl border border-current/10 bg-transparent px-4 py-3 text-sm" placeholder="Share the full context so we can respond with the right next step." />
+              <input className="h-12 rounded-full border border-neutral-200 bg-white px-4 text-sm text-neutral-950 placeholder:text-neutral-400" placeholder="Your name" />
+              <input className="h-12 rounded-full border border-neutral-200 bg-white px-4 text-sm text-neutral-950 placeholder:text-neutral-400" placeholder="Email address" />
+              <input className="h-12 rounded-full border border-neutral-200 bg-white px-4 text-sm text-neutral-950 placeholder:text-neutral-400" placeholder="Topic (pitch, media, bug…)" />
+              <textarea className="min-h-[180px] rounded-2xl border border-neutral-200 bg-white px-4 py-3 text-sm text-neutral-950 placeholder:text-neutral-400" placeholder="Share the full context so we can respond with the right next step." />
               <button type="submit" className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${tone.action}`}>Send message</button>
             </form>
           </div>
