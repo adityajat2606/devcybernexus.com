@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
+import { Plus_Jakarta_Sans } from 'next/font/google'
 
 import './globals.css'
 
@@ -13,11 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildSiteMetadata()
 }
 
+const siteSans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-plus-jakarta',
+  display: 'swap',
+})
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   const { recipe, brandPack } = getFactoryState()
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={siteSans.variable}>
       <body
         data-site-shell={recipe.homeLayout}
         data-motion-pack={recipe.motionPack}

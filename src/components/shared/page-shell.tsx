@@ -19,11 +19,11 @@ export function PageShell({
     <div className="min-h-screen bg-background">
       <NavbarShell />
       <main>
-        <section className="border-b border-border bg-secondary/30">
+        <section className="border-b border-neutral-200/80 bg-gradient-to-b from-orange-50/70 via-white to-background">
           <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
             <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <h1 className="text-3xl font-bold text-foreground">{title}</h1>
+                <h1 className="text-3xl font-semibold tracking-[-0.03em] text-neutral-950">{title}</h1>
                 {description && (
                   <p className="mt-2 max-w-2xl text-muted-foreground">{description}</p>
                 )}

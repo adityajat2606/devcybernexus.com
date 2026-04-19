@@ -2,75 +2,76 @@ import type { TaskKey } from '@/lib/site-config'
 
 export const siteContent = {
   navbar: {
-    tagline: 'Independent reading platform',
+    tagline: 'Cybersecurity editorial desk',
   },
   footer: {
-    tagline: 'Stories, resources, and discoverable posts',
+    tagline: 'Technical articles & industry analysis',
+    contactEmail: 'hello@devcybernexus.com',
   },
   hero: {
-    badge: 'Latest stories and visuals',
-    title: ['A thoughtful home for', 'stories, visuals, and discovery.'],
+    badge: 'Signal desk',
+    title: ['Long-form insight for', 'security builders and buyers.'],
     description:
-      'Explore fresh articles, image-led posts, and discoverable content across the platform through a calmer and clearer browsing experience.',
+      'Deep dives, threat context, and practical write-ups—published with a high-contrast editorial layout tuned for scanning and reading.',
     primaryCta: {
-      label: 'Read latest stories',
-      href: '/articles',
-    },
-    secondaryCta: {
-      label: 'Explore visuals',
-      href: '/images',
-    },
-    searchPlaceholder: 'Search stories, visuals, listings, and more',
-    focusLabel: 'Focus',
-    featureCardBadge: 'latest cover rotation',
-    featureCardTitle: 'Latest posts shape the visual identity of the homepage.',
-    featureCardDescription:
-      'Recent images and stories stay at the center of the experience without changing any core platform behavior.',
-  },
-  home: {
-    metadata: {
-      title: 'Stories, visuals, and discoverable content',
-      description:
-        'Explore articles, images, listings, and curated posts through a cleaner reading-first experience.',
-      openGraphTitle: 'Stories, visuals, and discoverable content',
-      openGraphDescription:
-        'Discover articles, visual posts, and connected content through a calmer reading-first experience.',
-      keywords: ['story platform', 'article site', 'visual content', 'content discovery'],
-    },
-    introBadge: 'About the platform',
-    introTitle: 'Built for reading, browsing, and connecting different kinds of content.',
-    introParagraphs: [
-      'This site brings together article-style reading, visual browsing, and structured discovery so visitors can move naturally between different content types.',
-      'Instead of separating stories, visuals, and supporting resources into disconnected surfaces, the platform keeps them connected in one place with consistent navigation and easier exploration.',
-      'Whether someone starts with a story, an image-led post, a listing, or a resource page, they can keep discovering related content without friction.',
-    ],
-    sideBadge: 'At a glance',
-    sidePoints: [
-      'Reading-first homepage with stronger emphasis on stories and imagery.',
-      'Connected sections for articles, visuals, listings, and supporting resources.',
-      'Cleaner browsing rhythm designed to make exploration feel easier.',
-      'Lightweight interactions that keep the experience fast and readable.',
-    ],
-    primaryLink: {
       label: 'Browse articles',
       href: '/articles',
     },
+    secondaryCta: {
+      label: 'Search library',
+      href: '/search',
+    },
+    searchPlaceholder: 'Search articles, topics, and tags',
+    focusLabel: 'Focus',
+    featureCardBadge: 'Reading queue',
+    featureCardTitle: 'Fresh analysis lands here first.',
+    featureCardDescription:
+      'The homepage highlights the latest editorial posts with room for typography, imagery, and calm pacing.',
+  },
+  home: {
+    metadata: {
+      title: 'Cybersecurity articles and technical analysis',
+      description:
+        'Read long-form cybersecurity articles, product commentary, and technical explainers from Dev Cyber Nexus.',
+      openGraphTitle: 'Cybersecurity articles and technical analysis',
+      openGraphDescription:
+        'Editorial coverage for practitioners who need clarity, depth, and a premium reading experience.',
+      keywords: ['cybersecurity articles', 'technical analysis', 'editorial', 'DevSecOps', 'threat research'],
+    },
+    introBadge: 'Platform',
+    introTitle: 'An article-first publication for security practitioners.',
+    introParagraphs: [
+      'Every layout decision here supports long-form reading: generous spacing, sharp hierarchy, and typography tuned for screens.',
+      'Browse by topic, open a story, and move through related analysis without leaving a cohesive editorial environment.',
+      'Whether you are researching a control, evaluating a vendor narrative, or teaching a team, the writing stays the hero.',
+    ],
+    sideBadge: 'Why it feels different',
+    sidePoints: [
+      'High-contrast orange signal accents with black type for confident scanning.',
+      'Rounded surfaces and soft motion that stay lightweight and CSS-first.',
+      'Article cards with bold category labels and clear “read next” pathways.',
+      'Mobile-first rhythm so the hero and library stay legible on small screens.',
+    ],
+    primaryLink: {
+      label: 'Open latest articles',
+      href: '/articles',
+    },
     secondaryLink: {
-      label: 'See visuals',
-      href: '/images',
+      label: 'Site search',
+      href: '/search',
     },
   },
   cta: {
-    badge: 'Start exploring',
-    title: 'Explore articles, visuals, and resources through one connected experience.',
+    badge: 'Stay current',
+    title: 'Subscribe to the desk—new analysis ships regularly.',
     description:
-      'Move between articles, image-led posts, listings, and resources through one clearer and more connected visual system.',
+      'Create a free reader account to keep your session on this device, then jump into the newest cybersecurity features and explainers.',
     primaryCta: {
-      label: 'Get Started Free',
+      label: 'Create free account',
       href: '/register',
     },
     secondaryCta: {
-      label: 'Contact Sales',
+      label: 'Contact editorial',
       href: '/contact',
     },
   },
@@ -130,13 +131,13 @@ export const taskIntroCopy: Record<
     title: 'Articles, stories, and long-form reading',
     paragraphs: [
       'This section is built for stories, explainers, guides, and long-form reading across topics and interests.',
-      'Articles connect with listings, images, resources, and other content types so deeper reading can lead naturally into related discovery.',
-      'Use this section to browse thoughtful posts, revisit useful writing, and move into supporting content when you want more context.',
+      'Each piece is laid out for comfortable reading with clear hierarchy, strong type, and imagery that supports the narrative.',
+      'Use search to jump across topics, or start from the homepage hero to see what just published.',
     ],
     links: [
-      { label: 'Explore listings', href: '/listings' },
-      { label: 'Open images', href: '/images' },
-      { label: 'Browse resources', href: '/pdf' },
+      { label: 'Search articles', href: '/search' },
+      { label: 'About the desk', href: '/about' },
+      { label: 'Reader sign in', href: '/login' },
     ],
   },
   classified: {
