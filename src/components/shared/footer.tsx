@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FileText, Building2, LayoutGrid, Tag, Github, Twitter, Linkedin, Image as ImageIcon, User, ArrowRight, Sparkles } from 'lucide-react'
+import { FileText, Building2, LayoutGrid, Tag, Github, Twitter, Linkedin, Image as ImageIcon, User, ArrowRight } from 'lucide-react'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
 import { siteContent } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
@@ -26,10 +26,9 @@ const footerLinks = {
   })),
   company: [
     { name: 'About', href: '/about' },
-    { name: 'Team', href: '/team' },
     { name: 'Careers', href: '/careers' },
-    { name: 'Blog', href: '/blog' },
     { name: 'Press', href: '/press' },
+    { name: 'Contact', href: '/contact' },
   ],
   resources: [
     { name: 'Help Center', href: '/help' },
@@ -88,7 +87,7 @@ export function Footer() {
             <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 p-1.5">
-                  <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+                  <img src="/favicon.png?v=20260417" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold">{SITE_CONFIG.name}</p>
@@ -139,34 +138,96 @@ export function Footer() {
   }
 
   if (recipe.footer === 'editorial-footer') {
+    const initials = SITE_CONFIG.name
+      .split(/\s+/)
+      .map((w) => w[0])
+      .join('')
+      .slice(0, 3)
+      .toUpperCase()
+    const contact = siteContent.footer.contactEmail
+
     return (
-      <footer className="border-t border-[#dbc6b6] bg-[linear-gradient(180deg,#fff9f0_0%,#fff1df_100%)] text-[#2f1d16]">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_0.9fr]">
+      <footer className="border-t border-neutral-200 bg-white text-neutral-950">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr_1fr] lg:items-start">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#dbc6b6] bg-white px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#72594a]">
-                <Sparkles className="h-3.5 w-3.5" />
-                Editorial desk
+              <div className="flex items-start gap-5">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-neutral-950 text-lg font-bold tracking-tight text-white">
+                  {initials}
+                </div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#FF5C00]">Publication</p>
+                  <h3 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">{SITE_CONFIG.name}</h3>
+                  <p className="mt-3 max-w-md text-sm leading-7 text-neutral-600">{SITE_CONFIG.description}</p>
+                  {contact ? (
+                    <a href={`mailto:${contact}`} className="mt-4 inline-block text-sm font-semibold text-[#FF5C00] hover:underline">
+                      {contact}
+                    </a>
+                  ) : null}
+                </div>
               </div>
-              <h3 className="mt-5 text-3xl font-semibold tracking-[-0.04em]">{SITE_CONFIG.name}</h3>
-              <p className="mt-4 max-w-md text-sm leading-7 text-[#72594a]">{SITE_CONFIG.description}</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#FF5C00] px-5 py-2.5 text-sm font-semibold text-white shadow-[0_14px_40px_rgba(255,92,0,0.25)] transition hover:bg-[#e65300]"
+                >
+                  Contact editorial
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/register"
+                  className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white px-5 py-2.5 text-sm font-semibold text-neutral-950 transition hover:bg-neutral-50"
+                >
+                  Join free
+                </Link>
+              </div>
             </div>
             <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Sections</h4>
-              <ul className="mt-4 space-y-3 text-sm">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">Sections</h4>
+              <ul className="mt-4 space-y-3 text-sm text-neutral-700">
                 {footerLinks.platform.map((item: any) => (
-                  <li key={item.name}><Link href={item.href} className="hover:text-[#2f1d16]">{item.name}</Link></li>
+                  <li key={item.name}>
+                    <Link href={item.href} className="inline-flex items-center gap-2 font-medium hover:text-[#FF5C00]">
+                      {item.icon ? <item.icon className="h-4 w-4 text-neutral-400" /> : null}
+                      {item.name}
+                    </Link>
+                  </li>
                 ))}
               </ul>
             </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Company</h4>
-              <ul className="mt-4 space-y-3 text-sm">
-                {footerLinks.company.map((item) => (
-                  <li key={item.name}><Link href={item.href} className="hover:text-[#2f1d16]">{item.name}</Link></li>
-                ))}
-              </ul>
+            <div className="grid gap-8 sm:grid-cols-2">
+              <div>
+                <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">Company</h4>
+                <ul className="mt-4 space-y-3 text-sm text-neutral-700">
+                  {footerLinks.company.map((item) => (
+                    <li key={item.name}>
+                      <Link href={item.href} className="hover:text-[#FF5C00]">
+                        {item.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">Connect</h4>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {socialLinks.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-neutral-50 text-neutral-800 transition hover:border-neutral-300 hover:bg-white"
+                    >
+                      <item.icon className="h-4 w-4" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
+          </div>
+          <div className="mt-12 border-t border-neutral-200 pt-6 text-center text-sm text-neutral-500">
+            &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
           </div>
         </div>
       </footer>
@@ -180,7 +241,7 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-3">
               <div className="h-11 w-11 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
+                <img src="/favicon.png?v=20260417" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
               </div>
               <div>
                 <span className="block text-lg font-semibold">{SITE_CONFIG.name}</span>

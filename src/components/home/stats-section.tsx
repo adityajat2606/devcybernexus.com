@@ -1,33 +1,33 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { FileText, Building2, Tag, Users } from 'lucide-react'
+import { FileText, BookOpen, Clock, Users } from 'lucide-react'
 
 const stats = [
   {
     icon: FileText,
-    value: '25K+',
-    label: 'Articles Published',
-    description: 'Quality content created by our community'
+    value: '180+',
+    label: 'Published features',
+    description: 'Long-form cybersecurity analysis and explainers',
   },
   {
-    icon: Building2,
-    value: '12K+',
-    label: 'Business Listings',
-    description: 'Verified businesses and services'
+    icon: BookOpen,
+    value: '42',
+    label: 'Topic lanes',
+    description: 'Structured coverage across architecture, AppSec, and ops',
   },
   {
-    icon: Tag,
-    value: '50K+',
-    label: 'Classified Ads',
-    description: 'Items listed and sold'
+    icon: Clock,
+    value: 'Weekly',
+    label: 'Release cadence',
+    description: 'Editorial drops on a predictable reading rhythm',
   },
   {
     icon: Users,
-    value: '100K+',
-    label: 'Active Users',
-    description: 'Growing community members'
-  }
+    value: 'Global',
+    label: 'Practitioner audience',
+    description: 'Built for builders, buyers, and security leaders',
+  },
 ]
 
 export function StatsSection() {

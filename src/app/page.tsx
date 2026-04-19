@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, Bookmark, Building2, Compass, FileText, Globe2, Image as ImageIcon, LayoutGrid, MapPin, ShieldCheck, Tag, User } from 'lucide-react'
+import { ArrowRight, Bookmark, Building2, Compass, FileText, Globe2, Image as ImageIcon, LayoutGrid, MapPin, MessageSquare, ShieldCheck, Tag, User } from 'lucide-react'
 import { ContentImage } from '@/components/shared/content-image'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
@@ -39,10 +39,30 @@ const taskIcons: Record<TaskKey, any> = {
   classified: Tag,
   image: ImageIcon,
   profile: User,
+  social: Globe2,
+  comment: MessageSquare,
+  pdf: FileText,
+  org: Building2,
+}
+
+function postTaskField(post: SitePost): unknown {
+  return (post as unknown as { task?: unknown }).task
 }
 
 function resolveTaskKey(value: unknown, fallback: TaskKey): TaskKey {
-  if (value === 'listing' || value === 'classified' || value === 'article' || value === 'image' || value === 'profile' || value === 'sbm') return value
+  if (
+    value === 'listing' ||
+    value === 'classified' ||
+    value === 'article' ||
+    value === 'image' ||
+    value === 'profile' ||
+    value === 'sbm' ||
+    value === 'social' ||
+    value === 'comment' ||
+    value === 'pdf' ||
+    value === 'org'
+  )
+    return value
   return fallback
 }
 
@@ -101,14 +121,17 @@ function getDirectoryTone(brandPack: string) {
 
 function getEditorialTone() {
   return {
-    shell: 'bg-[#fbf6ee] text-[#241711]',
-    panel: 'border border-[#dcc8b7] bg-[#fffdfa] shadow-[0_24px_60px_rgba(77,47,27,0.08)]',
-    soft: 'border border-[#e6d6c8] bg-[#fff4e8]',
-    muted: 'text-[#6e5547]',
-    title: 'text-[#241711]',
-    badge: 'bg-[#241711] text-[#fff1e2]',
-    action: 'bg-[#241711] text-[#fff1e2] hover:bg-[#3a241b]',
-    actionAlt: 'border border-[#dcc8b7] bg-transparent text-[#241711] hover:bg-[#f5e7d7]',
+    shell: 'bg-[#fafafa] text-neutral-950',
+    panel: 'border border-neutral-200/90 bg-white shadow-[0_28px_90px_rgba(0,0,0,0.07)]',
+    soft: 'border border-neutral-200/80 bg-white',
+    muted: 'text-neutral-600',
+    title: 'text-neutral-950',
+    badge: 'bg-neutral-950 text-white',
+    action: 'bg-[#FF5C00] text-white hover:bg-[#e65300]',
+    actionAlt: 'border border-neutral-300 bg-white text-neutral-950 hover:bg-neutral-50',
+    hero: 'relative overflow-hidden bg-[linear-gradient(135deg,#FF5C00_0%,#ff7a33_42%,#e04000_100%)] text-white',
+    heroMesh:
+      'pointer-events-none absolute inset-0 opacity-[0.22] [background-image:radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:18px_18px]',
   }
 }
 
@@ -247,14 +270,16 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
           <div className="grid gap-4 md:grid-cols-2">
             {(profilePosts.length ? profilePosts : classifiedPosts).slice(0, 4).map((post) => {
               const meta = getPostMeta(post)
-              const taskKey = resolveTaskKey(post.task, profilePosts.length ? 'profile' : 'classified')
+              const rawTask = postTaskField(post)
+              const taskKey = resolveTaskKey(rawTask, profilePosts.length ? 'profile' : 'classified')
+              const taskLabel = typeof rawTask === 'string' ? rawTask : ''
               return (
                 <Link key={post.id} href={getTaskHref(taskKey, post.slug)} className={`overflow-hidden rounded-[1.8rem] ${tone.panel}`}>
                   <div className="relative h-44 overflow-hidden">
                     <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="p-5">
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || post.task || 'Profile'}</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] opacity-70">{meta.category || taskLabel || 'Profile'}</p>
                     <h3 className="mt-2 text-xl font-semibold">{post.title}</h3>
                     <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Quick access to local information and related surfaces.'}</p>
                   </div>
@@ -275,52 +300,121 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
 
   return (
     <main className={tone.shell}>
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
+      <section className={`${tone.hero} border-b border-black/10`}>
+        <div className={tone.heroMesh} aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+          <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.26em] text-white/95 backdrop-blur-sm">
+                <FileText className="h-3.5 w-3.5" />
+                Article intelligence desk
+              </span>
+              <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-[-0.05em] text-white sm:text-5xl lg:text-6xl">
+                Cybersecurity articles with the clarity of a product dashboard.
+              </h1>
+              <p className="mt-6 max-w-2xl text-base leading-8 text-white/88 sm:text-lg">{SITE_CONFIG.description}</p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <Link
+                  href={primaryTask?.route || '/articles'}
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#FF5C00] shadow-[0_16px_50px_rgba(0,0,0,0.18)] transition hover:bg-neutral-100"
+                >
+                  Start reading
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/search"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/45 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/12"
+                >
+                  Search library
+                </Link>
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] border border-white/20 bg-white/95 p-5 text-neutral-950 shadow-[0_30px_80px_rgba(0,0,0,0.25)] sm:p-6">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-neutral-500">Editorial snapshot</p>
+                  <p className="mt-1 text-lg font-semibold">Signal overview</p>
+                </div>
+                <span className="rounded-full bg-emerald-500/15 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">Live</span>
+              </div>
+              <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-neutral-200 bg-neutral-50/80 p-4">
+                  <p className="text-xs font-medium text-neutral-500">Readership focus</p>
+                  <p className="mt-3 text-3xl font-semibold tracking-tight text-neutral-950">Articles</p>
+                  <p className="mt-1 text-xs text-neutral-500">Primary surface</p>
+                  <div className="mt-4 h-2 overflow-hidden rounded-full bg-neutral-200">
+                    <div className="h-full w-[72%] rounded-full bg-[#FF5C00]" />
+                  </div>
+                </div>
+                <div className="rounded-2xl border border-neutral-200 bg-white p-4">
+                  <p className="text-xs font-medium text-neutral-500">This week</p>
+                  <div className="mt-4 space-y-3">
+                    {[68, 44, 82].map((w, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-[#FF5C00]" />
+                        <div className="h-2 flex-1 rounded-full bg-neutral-100">
+                          <div className="h-full rounded-full bg-neutral-900/80" style={{ width: `${w}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <div className="mt-5 rounded-2xl border border-neutral-200 bg-gradient-to-br from-white to-neutral-50 p-4 text-sm text-neutral-600">
+                Layout, motion, and color follow one system—bold orange rails, black type, generous white space—so every article feels part of the same product.
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
           <div>
             <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${tone.badge}`}>
               <FileText className="h-3.5 w-3.5" />
-              Reading-first publication
+              Latest queue
             </span>
-            <h1 className={`mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.06em] sm:text-6xl ${tone.title}`}>
-              Essays, analysis, and slower reading designed like a publication, not a dashboard.
-            </h1>
-            <p className={`mt-6 max-w-2xl text-base leading-8 ${tone.muted}`}>{SITE_CONFIG.description}</p>
+            <h2 className={`mt-5 max-w-3xl text-3xl font-semibold tracking-[-0.04em] sm:text-4xl ${tone.title}`}>Explore data through narrative, not noise.</h2>
+            <p className={`mt-4 max-w-2xl text-base leading-8 ${tone.muted}`}>
+              Scan the newest stories on the right, then open the lead feature for a full-width reading experience with premium spacing.
+            </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href={primaryTask?.route || '/articles'} className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}>
-                Start reading
-                <ArrowRight className="h-4 w-4" />
-              </Link>
               <Link href="/about" className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.actionAlt}`}>
-                About the publication
+                About the desk
               </Link>
             </div>
           </div>
 
           <aside className={`rounded-[2rem] p-6 ${tone.panel}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Inside this issue</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">Inside this issue</p>
             <div className="mt-5 space-y-5">
-              {side.map((post) => (
-                <Link key={post.id} href={`/articles/${post.slug}`} className="block border-b border-black/10 pb-5 last:border-b-0 last:pb-0">
-                  <p className="text-sm font-semibold uppercase tracking-[0.18em] opacity-60">Feature</p>
-                  <h3 className="mt-2 text-xl font-semibold">{post.title}</h3>
-                  <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Long-form perspective with a calmer reading rhythm.'}</p>
-                </Link>
-              ))}
+              {side.length ? (
+                side.map((post) => (
+                  <Link key={post.id} href={`/articles/${post.slug}`} className="block border-b border-neutral-200/90 pb-5 last:border-b-0 last:pb-0">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#FF5C00]">Feature</p>
+                    <h3 className="mt-2 text-xl font-semibold text-neutral-950">{post.title}</h3>
+                    <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Long-form perspective with a calmer reading rhythm.'}</p>
+                  </Link>
+                ))
+              ) : (
+                <p className={`text-sm ${tone.muted}`}>New stories will appear here as soon as they publish.</p>
+              )}
             </div>
           </aside>
         </div>
 
         {lead ? (
-          <div className={`mt-12 overflow-hidden rounded-[2.5rem] ${tone.panel}`}>
+          <div className={`mt-14 overflow-hidden rounded-[2.5rem] ${tone.panel}`}>
             <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
-              <div className="relative min-h-[360px] overflow-hidden">
+              <div className="relative min-h-[320px] overflow-hidden sm:min-h-[380px]">
                 <ContentImage src={getPostImage(lead)} alt={lead.title} fill className="object-cover" />
               </div>
               <div className="p-8 lg:p-10">
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Lead story</p>
-                <h2 className="mt-4 text-4xl font-semibold tracking-[-0.04em]">{lead.title}</h2>
-                <p className={`mt-4 text-sm leading-8 ${tone.muted}`}>{lead.summary || 'A more deliberate lead story surface with room for a proper narrative setup.'}</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-[#FF5C00]">Lead story</p>
+                <h2 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-neutral-950 sm:text-4xl">{lead.title}</h2>
+                <p className={`mt-4 text-sm leading-8 sm:text-base ${tone.muted}`}>{lead.summary || 'A deliberate lead story surface with room for a proper narrative setup.'}</p>
                 <Link href={`/articles/${lead.slug}`} className={`mt-8 inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}>
                   Read article
                   <ArrowRight className="h-4 w-4" />
@@ -330,14 +424,16 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
           </div>
         ) : null}
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {supportTasks.slice(0, 3).map((task) => (
-            <Link key={task.key} href={task.route} className={`rounded-[1.8rem] p-6 ${tone.soft}`}>
-              <h3 className="text-xl font-semibold">{task.label}</h3>
-              <p className={`mt-3 text-sm leading-7 ${tone.muted}`}>{task.description}</p>
-            </Link>
-          ))}
-        </div>
+        {supportTasks.length > 0 ? (
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {supportTasks.slice(0, 3).map((task) => (
+              <Link key={task.key} href={task.route} className={`rounded-[1.8rem] p-6 transition hover:-translate-y-0.5 ${tone.soft}`}>
+                <h3 className="text-xl font-semibold">{task.label}</h3>
+                <p className={`mt-3 text-sm leading-7 ${tone.muted}`}>{task.description}</p>
+              </Link>
+            ))}
+          </div>
+        ) : null}
       </section>
     </main>
   )
@@ -375,7 +471,7 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
             {gallery.slice(0, 5).map((post, index) => (
               <Link
                 key={post.id}
-                href={getTaskHref(resolveTaskKey(post.task, 'image'), post.slug)}
+                href={getTaskHref(resolveTaskKey(postTaskField(post), 'image'), post.slug)}
                 className={index === 0 ? `col-span-2 row-span-2 overflow-hidden rounded-[2.4rem] ${tone.panel}` : `overflow-hidden rounded-[1.8rem] ${tone.soft}`}
               >
                 <div className={index === 0 ? 'relative h-[360px]' : 'relative h-[170px]'}>
@@ -440,7 +536,7 @@ function CurationHome({ primaryTask, bookmarkPosts, profilePosts, articlePosts }
 
           <div className="grid gap-4 md:grid-cols-2">
             {collections.map((post) => (
-              <Link key={post.id} href={getTaskHref(resolveTaskKey(post.task, 'sbm'), post.slug)} className={`rounded-[1.8rem] p-6 ${tone.panel}`}>
+              <Link key={post.id} href={getTaskHref(resolveTaskKey(postTaskField(post), 'sbm'), post.slug)} className={`rounded-[1.8rem] p-6 ${tone.panel}`}>
                 <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Collection</p>
                 <h3 className="mt-3 text-2xl font-semibold">{post.title}</h3>
                 <p className={`mt-3 text-sm leading-8 ${tone.muted}`}>{post.summary || 'A calmer bookmark surface with room for context and grouping.'}</p>

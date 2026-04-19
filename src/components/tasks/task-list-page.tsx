@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ArrowRight, Building2, FileText, Image as ImageIcon, LayoutGrid, Tag, User } from 'lucide-react'
+import { ArrowRight, Building2, FileText, Image as ImageIcon, LayoutGrid, Plus, Tag, User } from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
 import { TaskListClient } from '@/components/tasks/task-list-client'
@@ -27,8 +27,8 @@ const taskIcons: Record<TaskKey, any> = {
 const variantShells = {
   'listing-directory': 'bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,0.08),transparent_24%),linear-gradient(180deg,#f8fbff_0%,#ffffff_100%)]',
   'listing-showcase': 'bg-[linear-gradient(180deg,#ffffff_0%,#f4f9ff_100%)]',
-  'article-editorial': 'bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.08),transparent_20%),linear-gradient(180deg,#fff8ef_0%,#ffffff_100%)]',
-  'article-journal': 'bg-[linear-gradient(180deg,#fffdf9_0%,#f7f1ea_100%)]',
+  'article-editorial': 'bg-gradient-to-b from-orange-50/40 via-neutral-50 to-white',
+  'article-journal': 'bg-gradient-to-br from-white via-neutral-50 to-orange-50/30',
   'image-masonry': 'bg-[linear-gradient(180deg,#09101d_0%,#111c2f_100%)] text-white',
   'image-portfolio': 'bg-[linear-gradient(180deg,#07111f_0%,#13203a_100%)] text-white',
   'profile-creator': 'bg-[linear-gradient(180deg,#0a1120_0%,#101c34_100%)] text-white',
@@ -69,7 +69,15 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
         input: 'border-white/10 bg-white/6 text-white',
         button: 'bg-white text-slate-950 hover:bg-slate-200',
       }
-    : layoutKey.startsWith('article') || layoutKey.startsWith('sbm')
+    : layoutKey.startsWith('article')
+      ? {
+          muted: 'text-neutral-600',
+          panel: 'border border-neutral-200/90 bg-white shadow-[0_24px_70px_rgba(0,0,0,0.06)]',
+          soft: 'border border-neutral-200/80 bg-white',
+          input: 'border border-neutral-200 bg-white text-neutral-950',
+          button: 'bg-[#FF5C00] text-white hover:bg-[#e65300]',
+        }
+      : layoutKey.startsWith('sbm')
       ? {
           muted: 'text-[#72594a]',
           panel: 'border border-[#dbc6b6] bg-white/90',
@@ -147,24 +155,51 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
         ) : null}
 
         {layoutKey === 'article-editorial' || layoutKey === 'article-journal' ? (
-          <section className="mb-12 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-            <div>
-              <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
-              <h1 className="mt-3 max-w-4xl text-5xl font-semibold tracking-[-0.05em] text-foreground">{taskConfig?.description || 'Latest posts'}</h1>
-              <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>This reading surface uses slower pacing, stronger typographic hierarchy, and more breathing room so long-form content feels intentional rather than squeezed into a generic feed.</p>
-            </div>
-            <div className={`rounded-[2rem] p-6 ${ui.panel}`}>
-              <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${ui.muted}`}>Reading note</p>
-              <p className={`mt-4 text-sm leading-7 ${ui.muted}`}>Use category filters to jump between topics without collapsing the page into the same repeated card rhythm used by other task types.</p>
-              <form className="mt-5 flex items-center gap-3" action={taskConfig?.route || '#'}>
-                <select name="category" defaultValue={normalizedCategory} className={`h-11 flex-1 rounded-xl px-3 text-sm ${ui.input}`}>
-                  <option value="all">All categories</option>
-                  {CATEGORY_OPTIONS.map((item) => (
-                    <option key={item.slug} value={item.slug}>{item.name}</option>
-                  ))}
-                </select>
-                <button type="submit" className={`h-11 rounded-xl px-4 text-sm font-medium ${ui.button}`}>Apply</button>
-              </form>
+          <section className="mb-12">
+            {task === 'article' ? (
+              <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#FF5C00]">Editorial desk</p>
+                  <p className="mt-1 text-sm text-neutral-600">Draft or publish a new piece—same workflow, clearer entry point.</p>
+                </div>
+                <Link
+                  href="/create/article"
+                  className={`inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold shadow-[0_14px_40px_rgba(255,92,0,0.22)] transition hover:opacity-95 ${ui.button}`}
+                >
+                  <Plus className="h-4 w-4" />
+                  Create article
+                </Link>
+              </div>
+            ) : null}
+            <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+              <div>
+                <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
+                <h1 className="mt-3 max-w-4xl text-4xl font-semibold tracking-[-0.05em] text-neutral-950 sm:text-5xl">
+                  {taskConfig?.description || 'Latest posts'}
+                </h1>
+                <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>
+                  Browse long-form writing with strong hierarchy, generous spacing, and category filters that keep scanning fast without turning the library into a generic feed.
+                </p>
+              </div>
+              <div className={`rounded-[2rem] p-6 ${ui.panel}`}>
+                <p className={`text-xs font-semibold uppercase tracking-[0.24em] text-[#FF5C00]`}>Reading note</p>
+                <p className={`mt-4 text-sm leading-7 ${ui.muted}`}>
+                  Pick a lane below to narrow topics, then open any headline for a full-width reading layout tuned for depth and clarity.
+                </p>
+                <form className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center" action={taskConfig?.route || '#'}>
+                  <select name="category" defaultValue={normalizedCategory} className={`h-11 w-full flex-1 rounded-full border px-3 text-sm sm:min-w-0 ${ui.input}`}>
+                    <option value="all">All categories</option>
+                    {CATEGORY_OPTIONS.map((item) => (
+                      <option key={item.slug} value={item.slug}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button type="submit" className={`h-11 shrink-0 rounded-full px-6 text-sm font-semibold ${ui.button}`}>
+                    Apply
+                  </button>
+                </form>
+              </div>
             </div>
           </section>
         ) : null}
