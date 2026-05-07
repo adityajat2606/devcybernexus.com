@@ -297,6 +297,7 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
   const tone = getEditorialTone()
   const lead = articlePosts[0]
   const side = articlePosts.slice(1, 5)
+  const featuredStories = articlePosts.slice(5, 8)
 
   return (
     <main className={tone.shell}>
@@ -404,6 +405,26 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
             </div>
           </aside>
         </div>
+
+        {featuredStories.length > 0 ? (
+          <div className="mt-14">
+            <h3 className={`text-xl font-semibold ${tone.title}`}>More featured stories</h3>
+            <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {featuredStories.map((post) => (
+                <Link key={post.id} href={`/articles/${post.slug}`} className={`overflow-hidden rounded-[1.8rem] ${tone.panel} transition hover:-translate-y-1`}>
+                  <div className="relative h-48 overflow-hidden">
+                    <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
+                  </div>
+                  <div className="p-5">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#FF5C00]">Featured</p>
+                    <h4 className="mt-2 text-lg font-semibold text-neutral-950">{post.title}</h4>
+                    <p className={`mt-2 text-sm leading-6 ${tone.muted} line-clamp-2`}>{post.summary || 'Read this featured article for more insights.'}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        ) : null}
 
         {lead ? (
           <div className={`mt-14 overflow-hidden rounded-[2.5rem] ${tone.panel}`}>

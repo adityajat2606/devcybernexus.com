@@ -27,7 +27,6 @@ const footerLinks = {
   company: [
     { name: 'About', href: '/about' },
     { name: 'Careers', href: '/careers' },
-    { name: 'Press', href: '/press' },
     { name: 'Contact', href: '/contact' },
   ],
   resources: [
@@ -144,8 +143,7 @@ export function Footer() {
       .join('')
       .slice(0, 3)
       .toUpperCase()
-    const contact = siteContent.footer.contactEmail
-
+    
     return (
       <footer className="border-t border-neutral-200 bg-white text-neutral-950">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -159,12 +157,7 @@ export function Footer() {
                   <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#FF5C00]">Publication</p>
                   <h3 className="mt-2 text-2xl font-semibold tracking-[-0.03em]">{SITE_CONFIG.name}</h3>
                   <p className="mt-3 max-w-md text-sm leading-7 text-neutral-600">{SITE_CONFIG.description}</p>
-                  {contact ? (
-                    <a href={`mailto:${contact}`} className="mt-4 inline-block text-sm font-semibold text-[#FF5C00] hover:underline">
-                      {contact}
-                    </a>
-                  ) : null}
-                </div>
+                                  </div>
               </div>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link

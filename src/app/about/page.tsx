@@ -49,14 +49,7 @@ export default function AboutPage() {
           <p className="mt-5 max-w-xl text-sm leading-7 text-neutral-600">
             {SITE_CONFIG.name} exists so sharp analysis does not disappear into noisy feeds. We combine editorial standards with a product-grade layout system—orange signal accents, black type, generous white space—so every story feels part of one publication.
           </p>
-          <Link
-            href="/team"
-            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-[#FF5C00] hover:underline"
-          >
-            Meet the people behind the desk
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+                  </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:mt-0">
           <div className="rounded-2xl border border-neutral-200 bg-white/90 p-5 shadow-sm">
             <p className="text-xs font-medium uppercase tracking-wider text-neutral-500">Focus</p>
@@ -89,14 +82,11 @@ export default function AboutPage() {
       </div>
 
       <div className="mt-14">
-        <div className="mb-8 flex flex-col gap-2 border-b border-neutral-200 pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-8 border-b border-neutral-200 pb-6">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-neutral-500">People</p>
             <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-neutral-950">Editorial &amp; product</h2>
           </div>
-          <Link href="/team" className="text-sm font-semibold text-[#FF5C00] hover:underline">
-            View directory
-          </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
           {mockTeamMembers.slice(0, 3).map((member) => (
