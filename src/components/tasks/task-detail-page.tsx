@@ -1,7 +1,7 @@
 import { ContentImage } from "@/components/shared/content-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MapPin, Globe, Phone, Tag, Mail } from "lucide-react";
+import { MapPin, Globe, Phone, Tag, Mail, Calendar, User, Image as ImageIcon, Play, Menu } from "lucide-react";
 import { NavbarShell } from "@/components/shared/navbar-shell";
 import { Footer } from "@/components/shared/footer";
 import { TaskPostCard } from "@/components/shared/task-post-card";
@@ -36,6 +36,24 @@ type PostContent = {
   images?: string[];
   latitude?: number | string;
   longitude?: number | string;
+  video?: string;
+  gallery?: string[];
+};
+
+const extractTableOfContents = (html: string) => {
+  const headings = html.match(/<h[2-6][^>]*>(.*?)<\/h[2-6]>/gi) || [];
+  return headings.map((heading, index) => {
+    const text = heading.replace(/<[^>]*>/g, '').trim();
+    const id = text.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return { id, text, index };
+  });
+};
+
+const addIdsToHeadings = (html: string) => {
+  return html.replace(/<h([2-6])([^>]*)>(.*?)<\/h\1>/gi, (match, level, attrs, text) => {
+    const id = text.replace(/<[^>]*>/g, '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return `<h${level}${attrs} id="${id}">${text}</h${level}>`;
+  });
 };
 
 const isValidImageUrl = (value?: string | null) =>
@@ -146,7 +164,8 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
   const category = content.category || post.tags?.[0] || taskConfig?.label || task;
   const description = content.description || post.summary || "Details coming soon.";
   const descriptionHtml = !isArticle ? formatRichHtml(description, "Details coming soon.") : "";
-  const articleHtml = isArticle ? formatArticleHtml(content, post) : "";
+  const rawArticleHtml = isArticle ? formatArticleHtml(content, post) : "";
+const articleHtml = rawArticleHtml ? addIdsToHeadings(rawArticleHtml) : "";
   const articleSummary =
     post.summary ||
     (typeof content.excerpt === "string" ? content.excerpt : "") ||
@@ -267,44 +286,165 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
         >
           <div className={cn(isClassified ? "space-y-8" : "")}>
             {isArticle ? (
-              <div className="mx-auto w-full max-w-4xl space-y-6">
-                <h1 className="text-4xl font-semibold leading-tight text-foreground">
-                  {post.title}
-                </h1>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                  <span>By {articleAuthor}</span>
-                  {articleDate ? <span>{articleDate}</span> : null}
-                  <Badge variant="secondary" className="inline-flex items-center gap-1">
-                    <Tag className="h-3.5 w-3.5" />
-                    {category}
-                  </Badge>
+              <div className="mx-auto w-full max-w-6xl">
+                {/* Breadcrumbs */}
+                <nav className="mb-6 text-sm text-gray-600">
+                  <Link href="/" className="hover:text-gray-900">Home</Link>
+                  <span className="mx-2">{'>'}</span>
+                  <Link href={taskConfig?.route || "/"} className="hover:text-gray-900">About {SITE_CONFIG.name}</Link>
+                  <span className="mx-2">{'>'}</span>
+                  <Link href={taskConfig?.route || "/"} className="hover:text-gray-900">Our Articles</Link>
+                  <span className="mx-2">{'>'}</span>
+                  <Link href={taskConfig?.route || "/"} className="hover:text-gray-900">{category}</Link>
+                  <span className="mx-2">{'>'}</span>
+                  <span className="text-gray-900">{post.title}</span>
+                </nav>
+
+                {/* Article Header */}
+                <div className="mb-8">
+                  <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+                    <Badge variant="secondary" className="capitalize">{category}</Badge>
+                    <span>•</span>
+                    <span className="flex items-center gap-1">
+                      <User className="h-4 w-4" />
+                      Autor: {articleAuthor}
+                    </span>
+                  </div>
+                  <h1 className="text-4xl font-bold text-gray-900 mb-4">{post.title}</h1>
                 </div>
-                {postTags.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {postTags.map((tag) => (
-                      <Badge key={tag} variant="outline">
-                        {tag}
-                      </Badge>
-                    ))}
+
+                {/* Two Column Layout */}
+                <div className="grid gap-8 lg:grid-cols-[2fr_1fr]">
+                  {/* Main Content Column */}
+                  <div className="space-y-8">
+                    {/* Hero Image/Video */}
+                    {content.video ? (
+                      <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-100">
+                        <video
+                          src={content.video}
+                          controls
+                          className="w-full h-full object-cover"
+                          poster={images[0]}
+                        >
+                          Your browser does not support the video tag.
+                        </video>
+                      </div>
+                    ) : images[0] ? (
+                      <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-100">
+                        <ContentImage
+                          src={images[0]}
+                          alt={`${post.title} featured image`}
+                          fill
+                          className="object-cover"
+                          intrinsicWidth={1600}
+                          intrinsicHeight={900}
+                        />
+                      </div>
+                    ) : null}
+
+                    
+                    {/* Table of Contents */}
+                    {articleHtml && (
+                      <div className="bg-gray-50 rounded-xl p-6">
+                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                          <Menu className="h-5 w-5" />
+                          Table of Contents
+                        </h3>
+                        <nav className="space-y-2">
+                          {extractTableOfContents(articleHtml).map((item) => (
+                            <Link
+                              key={item.id}
+                              href={`#${item.id}`}
+                              className="block text-sm text-gray-600 hover:text-gray-900 hover:underline py-1"
+                            >
+                              {item.text}
+                            </Link>
+                          ))}
+                        </nav>
+                      </div>
+                    )}
+
+                    {/* Article Content */}
+                    <div className="prose prose-lg max-w-none">
+                      <RichContent 
+                        html={articleHtml} 
+                        className="leading-8 prose-p:my-6 prose-h2:my-8 prose-h3:my-6 prose-ul:my-6" 
+                      />
+                    </div>
+
+                    {/* Comments */}
+                    <ArticleComments slug={post.slug} />
                   </div>
-                ) : null}
-                {articleSummary ? (
-                  <p className="text-base leading-7 text-muted-foreground">{articleSummary}</p>
-                ) : null}
-                {images[0] ? (
-                  <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl border border-border bg-muted">
-                    <ContentImage
-                      src={images[0]}
-                      alt={`${post.title} featured image`}
-                      fill
-                      className="object-cover"
-                      intrinsicWidth={1600}
-                      intrinsicHeight={900}
-                    />
+
+                  {/* Sidebar Column */}
+                  <div className="space-y-6">
+                    {/* Event Photos Gallery */}
+                    {images.length > 1 && (
+                      <div className="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                          <ImageIcon className="h-5 w-5" />
+                          Event Photos
+                        </h3>
+                        <div className="grid grid-cols-2 gap-3">
+                          {images.slice(0, 4).map((image, index) => (
+                            <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
+                              {image.includes('video') || content.video ? (
+                                <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
+                                  <Play className="h-8 w-8 text-gray-600" />
+                                </div>
+                              ) : (
+                                <ContentImage
+                                  src={image}
+                                  alt={`${post.title} image ${index + 1}`}
+                                  fill
+                                  className="object-cover hover:scale-105 transition-transform"
+                                />
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Mosaic Gallery */}
+                    {content.gallery && content.gallery.length > 0 && (
+                      <div className="bg-white rounded-xl border border-gray-200 p-6">
+                        <h3 className="text-lg font-semibold mb-4">
+                          Event Photos Gallery
+                        </h3>
+                        <div className="grid grid-cols-3 gap-2">
+                          {content.gallery.slice(0, 6).map((image, index) => (
+                            <div key={index} className="relative aspect-square rounded-lg overflow-hidden">
+                              <ContentImage
+                                src={image}
+                                alt={`${post.title} gallery ${index + 1}`}
+                                fill
+                                className="object-cover hover:scale-105 transition-transform"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Related Content */}
+                    <div className="bg-white rounded-xl border border-gray-200 p-6">
+                      <h3 className="text-lg font-semibold mb-4">Related Content</h3>
+                      <div className="space-y-3">
+                        {related.slice(0, 3).map((item) => (
+                          <Link
+                            key={item.id}
+                            href={buildPostUrl(task, item.slug)}
+                            className="block p-3 rounded-lg border border-gray-100 hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                          >
+                            <h4 className="font-medium text-sm text-gray-900 line-clamp-2">{item.title}</h4>
+                            <p className="text-xs text-gray-500 mt-1 line-clamp-2">{item.summary}</p>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                ) : null}
-                <RichContent html={articleHtml} className="leading-8 prose-p:my-6 prose-h2:my-8 prose-h3:my-6 prose-ul:my-6" />
-                <ArticleComments slug={post.slug} />
+                </div>
               </div>
             ) : null}
 

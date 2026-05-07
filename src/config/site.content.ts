@@ -2,7 +2,7 @@ import type { TaskKey } from '@/lib/site-config'
 
 export const siteContent = {
   navbar: {
-    tagline: 'Cybersecurity editorial desk',
+    tagline: 'Editorial desk',
   },
   footer: {
     tagline: 'Technical articles & industry analysis',
