@@ -31,6 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 type EnabledTask = (typeof SITE_CONFIG.tasks)[number]
 type TaskFeedItem = { task: EnabledTask; posts: SitePost[] }
+type ExploreCard = { post: SitePost; taskKey: TaskKey; href: string }
 
 const taskIcons: Record<TaskKey, any> = {
   article: FileText,
@@ -306,14 +307,13 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr]">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.26em] text-white/95 backdrop-blur-sm">
-                <FileText className="h-3.5 w-3.5" />
-                Article intelligence desk
-              </span>
+              
               <h1 className="mt-6 max-w-3xl text-4xl font-semibold tracking-[-0.05em] text-white sm:text-5xl lg:text-6xl">
-                Cybersecurity articles with the clarity of a product dashboard.
+                Thoughtful content with a clean, easy-to-follow reading experience.
               </h1>
-              <p className="mt-6 max-w-2xl text-base leading-8 text-white/88 sm:text-lg">{SITE_CONFIG.description}</p>
+              <p className="mt-6 max-w-2xl text-base leading-8 text-white/88 sm:text-lg">
+                A reading-first platform for stories, ideas, and updates presented in a calm and consistent layout.
+              </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <Link
                   href={primaryTask?.route || '/articles'}
@@ -342,7 +342,7 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
               <div className="mt-6 grid gap-4 sm:grid-cols-2">
                 <div className="rounded-2xl border border-neutral-200 bg-neutral-50/80 p-4">
                   <p className="text-xs font-medium text-neutral-500">Readership focus</p>
-                  <p className="mt-3 text-3xl font-semibold tracking-tight text-neutral-950">Articles</p>
+                  <p className="mt-3 text-3xl font-semibold tracking-tight text-neutral-950">Content</p>
                   <p className="mt-1 text-xs text-neutral-500">Primary surface</p>
                   <div className="mt-4 h-2 overflow-hidden rounded-full bg-neutral-200">
                     <div className="h-full w-[72%] rounded-full bg-[#FF5C00]" />
@@ -363,7 +363,7 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
                 </div>
               </div>
               <div className="mt-5 rounded-2xl border border-neutral-200 bg-gradient-to-br from-white to-neutral-50 p-4 text-sm text-neutral-600">
-                Layout, motion, and color follow one system—bold orange rails, black type, generous white space—so every article feels part of the same product.
+                Layout, motion, and color follow one system—bold orange rails, black type, generous white space—so every page feels part of the same product.
               </div>
             </div>
           </div>
@@ -614,6 +614,15 @@ export default async function HomePage() {
   const imagePosts = taskFeed.find(({ task }) => task.key === 'image')?.posts || []
   const profilePosts = taskFeed.find(({ task }) => task.key === 'profile')?.posts || []
   const bookmarkPosts = taskFeed.find(({ task }) => task.key === 'sbm')?.posts || []
+  const exploreCards: ExploreCard[] = taskFeed
+    .flatMap(({ task, posts }) =>
+      posts.map((post) => ({
+        post,
+        taskKey: task.key,
+        href: getTaskHref(task.key, post.slug),
+      }))
+    )
+    .slice(0, 9)
 
   const schemaData = [
     {
@@ -659,6 +668,24 @@ export default async function HomePage() {
       ) : null}
       {productKind === 'curation' ? (
         <CurationHome primaryTask={primaryTask} bookmarkPosts={bookmarkPosts} profilePosts={profilePosts} articlePosts={articlePosts} />
+      ) : null}
+      {exploreCards.length > 0 ? (
+        <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+          <div className="mb-8 flex items-end justify-between gap-4 border-b border-border pb-6">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">More to explore</p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Browse more from across the site.</h2>
+            </div>
+            <Link href="/search" className="text-sm font-semibold text-primary hover:opacity-80">
+              View all
+            </Link>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {exploreCards.map(({ post, taskKey, href }) => (
+              <TaskPostCard key={`explore-${taskKey}-${post.id}`} post={post} href={href} taskKey={taskKey} />
+            ))}
+          </div>
+        </section>
       ) : null}
       <Footer />
     </div>

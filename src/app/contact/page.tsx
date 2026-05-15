@@ -7,8 +7,6 @@ import { getProductKind } from '@/design/factory/get-product-kind'
 import { CONTACT_PAGE_OVERRIDE_ENABLED, ContactPageOverride } from '@/overrides/contact-page'
 import { ContactLeadForm } from "@/components/shared/contact-lead-form";
 
-const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'contact@devcybernexus.com'
-
 function getTone(kind: ReturnType<typeof getProductKind>) {
   if (kind === 'directory') {
     return {
@@ -103,7 +101,6 @@ export default function ContactPage() {
 
           <div className={`rounded-[2rem] p-7 ${tone.panel}`}>
             <h2 className="text-2xl font-semibold">Send a message</h2>
-            <p className={`mt-2 text-sm ${tone.muted}`}>Or email us directly at <a href={`mailto:${CONTACT_EMAIL}`} className="underline">{CONTACT_EMAIL}</a></p>
             <ContactLeadForm />
           </div>
         </section>

@@ -3,7 +3,6 @@ import { ArrowRight, BookOpen, LineChart, Shield } from "lucide-react";
 import { PageShell } from "@/components/shared/page-shell";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { mockTeamMembers } from "@/data/mock-data";
 import { SITE_CONFIG } from "@/lib/site-config";
 
 const pillars = [
@@ -79,34 +78,6 @@ export default function AboutPage() {
             </CardContent>
           </Card>
         ))}
-      </div>
-
-      <div className="mt-14">
-        <div className="mb-8 border-b border-neutral-200 pb-6">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.26em] text-neutral-500">People</p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-[-0.03em] text-neutral-950">Editorial &amp; product</h2>
-          </div>
-        </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {mockTeamMembers.slice(0, 3).map((member) => (
-            <Card key={member.id} className="border-neutral-200/90 bg-white transition hover:border-[#FF5C00]/30">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100 text-sm font-bold text-neutral-700">
-                    {member.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-neutral-950">{member.name}</p>
-                    <p className="text-xs text-neutral-500">{member.role}</p>
-                  </div>
-                </div>
-                <p className="mt-4 text-sm leading-7 text-neutral-600">{member.bio}</p>
-                <p className="mt-3 text-xs text-neutral-400">{member.location}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       </div>
     </PageShell>
   );

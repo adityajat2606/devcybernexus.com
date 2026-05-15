@@ -43,11 +43,6 @@ const footerLinks = {
   ],
 }
 
-const socialLinks = [
-  { name: 'Twitter', href: 'https://twitter.com', icon: Twitter },
-  { name: 'GitHub', href: 'https://github.com', icon: Github },
-  { name: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
-]
 
 export function Footer() {
   if (FOOTER_OVERRIDE_ENABLED) {
@@ -119,13 +114,9 @@ export function Footer() {
                 </ul>
               </div>
               <div>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Connect</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400"></h3>
                 <div className="mt-4 flex gap-3">
-                  {socialLinks.map((item) => (
-                    <Link key={item.name} href={item.href} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/10 bg-white/8 p-2.5 text-slate-200 hover:bg-white/12 hover:text-white">
-                      <item.icon className="h-4 w-4" />
-                    </Link>
-                  ))}
+                  
                 </div>
               </div>
             </div>
@@ -202,19 +193,9 @@ export function Footer() {
                 </ul>
               </div>
               <div>
-                <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500">Connect</h4>
+                <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-neutral-500"></h4>
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {socialLinks.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-neutral-50 text-neutral-800 transition hover:border-neutral-300 hover:bg-white"
-                    >
-                      <item.icon className="h-4 w-4" />
-                    </Link>
-                  ))}
+                  
                 </div>
               </div>
             </div>
